@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { TestService } from '../test-service.service';
 import { Codechallenge } from './codechallenge';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  // standalone: true,
-  //imports: [CommonModule, RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, ReactiveFormsModule],
   templateUrl: './app.component.html',
-  //styleUrl: './app.component.css',
+  styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit{
   title = 'testCreator_front';
+
+  private baseUrl = 'http://localhost:8080';
 
 
   codechallenge: Codechallenge = new Codechallenge();
   submitted = false;
   dadosCodechallenge!: FormGroup;
-
-
 
   selectedLanguage: any = '';
   selectedVersion: any = '';
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit{
   selectedIdiom: any = '';
   responseText: any = '';
 
-  constructor(private testService: TestService, private http: HttpClient, private fb:FormBuilder) {
+  constructor(private http: HttpClient) {
 
   }
 
@@ -36,12 +37,12 @@ export class AppComponent implements OnInit{
   }
 
   private createFormGroup() {
-    this.dadosCodechallenge = this.fb.group({
-      language: ['', Validators.required],
-      version: ['', Validators.required],
-      seniority: ['', Validators.required],
-      idiom: ['', Validators.required],
-      responseText: ['']
+    this.dadosCodechallenge = new FormGroup({
+      language:new FormControl(''),
+      version: new FormControl(''),
+      seniority:new FormControl(''),
+      idiom:new FormControl(''),
+      responseText: new FormControl('')
     });
   }
 
@@ -53,23 +54,19 @@ export class AppComponent implements OnInit{
     this.callPostQuestion(this.codechallenge);
   }
 
-  callPostQuestion(codechallenge:Codechallenge): void {
+  callPostQuestion(codechallenge:Codechallenge): Promise<any>  {
     const selectedData = {
-      language: codechallenge.language,
-      version: codechallenge.version,
-      seniority: codechallenge.seniority,
-      idiom: codechallenge.idiom
+      language: this.codechallenge.language,
+      version: this.codechallenge.version,
+      seniority: this.codechallenge.seniority,
+      idiom: this.codechallenge.idiom
     };
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
 
-    this.testService.postQuestion(selectedData)
-      .then(response => {
-        // Set the response to the responseText property
-        this.responseText = response as string;
-        console.log('Response from postQuestion:', response);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error('Error calling postQuestion:', error);
-      });
+    return this.http.get(`${this.baseUrl}/api/v1/create/chatgpt`, { headers: reqHeader, params: selectedData })
+      .toPromise()
+      .then(response => response);
   }
 }
