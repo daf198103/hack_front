@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Creator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            height: 100px; /* Adjust the height as needed */
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<form [formGroup]="dadosCodechallenge" (ngSubmit)="onSubmit()" >
+  <h1>Code Challenge Creator</h1>
+    <label for="language">Language:</label>
+    <input class="form-control" formControlName="language" type="text" id="language" name="language">
+
+    <label for="version">Version:</label>
+    <input class="form-control" formControlName="version" type="text" id="version" name="version">
+
+    <label for="seniority">Seniority:</label>
+    <input class="form-control" formControlName="seniority" type="text" id="seniority" name="seniority">
+
+    <label for="idiom">Idiom:</label>
+    <input class="form-control" formControlName="idiom" type="text" id="idiom" name="idiom">
+
+    <!-- Added textarea for response -->
+    <textarea formControlName="responseText" placeholder="Response will be displayed here"></textarea>
+
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>
