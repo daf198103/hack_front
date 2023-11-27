@@ -71,7 +71,10 @@
     <input class="form-control" formControlName="idiom" type="text" id="idiom" name="idiom">
 
     <!-- Added textarea for response -->
-    <textarea formControlName="responseText" placeholder="Response will be displayed here"></textarea>
+    <div *ngIf="responseText !== undefined">
+        <h2>Response:</h2>
+        <h1>{{ responseText }}</h1>
+      </div>
 
     <button type="submit">Submit</button>
 </form>
